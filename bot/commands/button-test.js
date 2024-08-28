@@ -15,7 +15,7 @@ module.exports = {
                             ["type"]: discord.ComponentType.Button,
                             ["label"]: "Test",
                             ["style"]: discord.ButtonStyle.Primary,
-                            ["customId"]: `${client.user.id}/test`
+                            ["customId"]: `test`
                         }
                     ]
                 }
@@ -23,7 +23,9 @@ module.exports = {
         });
         
         interaction.channel.createMessageComponentCollector().on("collect",async (interaction) => {
-            await interaction.channel.send(interaction.customId);
+            if (interaction.message.author === client.user) {
+                await interaction.channel.send(interaction.customId);
+            }
         });
     }
 };
