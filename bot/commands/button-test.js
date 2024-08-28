@@ -23,7 +23,7 @@ module.exports = {
         });
         
         interaction.channel.createMessageComponentCollector().on("collect",async (interaction) => {
-            interaction.channel.send(interaction.customId);
+            await interaction.channel.send(interaction.customId);
         });
     }
 };
