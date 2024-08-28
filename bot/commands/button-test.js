@@ -16,7 +16,7 @@ module.exports = {
                             ["type"]: discord.ComponentType.Button,
                             ["label"]: "Test",
                             ["style"]: discord.ButtonStyle.Primary,
-                            ["customId"]: `test`
+                            ["customId"]: "test"
                         }
                     ]
                 }
