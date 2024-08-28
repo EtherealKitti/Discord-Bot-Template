@@ -7,7 +7,7 @@ module.exports = {
         ["description"]: "Button test go brr"
     },
     ["execute"]: async (client,sqliteDatabase,interaction,utilities) => {
-        await interaction.reply({
+        const message = await interaction.reply({
             ["components"]: [
                 {
                     ["type"]: discord.ComponentType.ActionRow,
@@ -22,11 +22,10 @@ module.exports = {
                 }
             ]
         });
-        
-        interaction.channel.createMessageComponentCollector().on("collect",async (interaction) => {
-            if (interaction.message.author === client.user) {
-                await interaction.channel.send(interaction.customId);
-            }
+
+        message.awaitMessageComponent()
+        .then(async (interaction) => {
+            await interaction.reply(interaction.customId);
         });
     }
 };
