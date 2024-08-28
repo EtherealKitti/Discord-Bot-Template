@@ -38,7 +38,7 @@ module.exports = {
             }
         ]
     },
-    ["execute"]: (client,sqliteDatabase,interaction,utilities) => {
+    ["execute"]: async (client,sqliteDatabase,interaction,utilities) => {
         const tableName = "test";
         const testDatabase = sqliteDatabase(__dirname,path.basename(__filename).split(".")[0]);
         
@@ -46,8 +46,8 @@ module.exports = {
             testDatabase.run(`CREATE TABLE IF NOT EXISTS ${tableName} (id INT,text TEXT)`);
             
             const returnRows = () => {
-                testDatabase.all(`SELECT * FROM ${tableName}`,(error,result) => {
-                    interaction.reply(JSON.stringify(result,null,5));
+                testDatabase.all(`SELECT * FROM ${tableName}`,async (error,result) => {
+                    await interaction.reply(JSON.stringify(result,null,5));
                 });
             };
             

@@ -6,8 +6,8 @@ module.exports = {
         ["name"]: path.basename(__filename).split(".")[0],
         ["description"]: "Embed test go brr",
     },
-    ["execute"]: (client,sqliteDatabase,interaction,utilities) => {
-        interaction.reply({
+    ["execute"]: async (client,sqliteDatabase,interaction,utilities) => {
+        await interaction.reply({
             embeds: [
                 {
                     ["color"]: 0x0099ff,
