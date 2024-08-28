@@ -7,10 +7,6 @@ module.exports = {
         ["description"]: "Button test go brr"
     },
     ["execute"]: async (client,sqliteDatabase,interaction,utilities) => {
-        interaction.channel.createMessageComponentCollector().on("collect",async (component) => {
-            interaction.channel.send(component.customId);
-        });
-        
         await interaction.reply({
             ["components"]: [
                 {
@@ -24,6 +20,10 @@ module.exports = {
                     ]
                 }
             ]
+        });
+        
+        interaction.channel.createMessageComponentCollector().on("collect",async (interaction) => {
+            interaction.channel.send(interaction.customId);
         });
     }
 };
