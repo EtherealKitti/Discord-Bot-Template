@@ -10,6 +10,7 @@ module.exports = {
         await interaction.reply({
             ["components"]: [
                 {
+                    ["type"]: discord.ComponentType.ActionRow,
                     ["components"]: [
                         {
                             ["type"]: discord.ComponentType.Button,
