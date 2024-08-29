@@ -143,7 +143,7 @@ client.on(discord.Events.ClientReady,() => {
 	}
 	
 	setStatus();
-	setInterval(setStatus,10000);
+	setInterval(setStatus,10_000);
 });
 
 client.login(token);
