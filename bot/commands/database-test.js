@@ -38,9 +38,9 @@ module.exports = {
             }
         ]
     },
-    ["execute"]: async (client,sqliteDatabase,utility,interaction) => {
+    ["execute"]: async (client,utility,interaction) => {
         const tableName = "test";
-        const testDatabase = sqliteDatabase(__dirname,path.basename(__filename).split(".")[0]);
+        const testDatabase = utility.database(__dirname,path.basename(__filename).split(".")[0]);
         
         testDatabase.serialize(() => {
             testDatabase.run(`CREATE TABLE IF NOT EXISTS ${tableName} (id INT,text TEXT)`);

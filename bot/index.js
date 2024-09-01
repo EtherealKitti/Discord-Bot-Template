@@ -37,8 +37,54 @@ new discord.REST({["version"]: 10}).setToken(token).put(
 			if (!fs.existsSync(databasePath.replaceAll(`/${databaseName}.db`,""))) {
 				fs.mkdirSync(path.dirname(databasePath),{["recursive"]: true});
 			}
+
+			let database = new sqlite.Database(databasePath);
 			
-			return new sqlite.Database(databasePath);
+			database.arrayToRows = (array) => {
+				let values = "";
+				
+				for (const row of array) {
+					let rowString = "";
+					
+					for (const element of row) {
+						if (typeof(element) === "string") {
+							rowString += `'${element.replaceAll("'","<u0027>")}',`;
+						} else {
+							rowString += `${element},`;
+						}
+					}
+					
+					values += `(${rowString.slice(0,-1)}),`;
+				}
+				
+				return values.slice(0,-1);
+			};
+			
+			database.formatJsonInRows = (rows) => {
+				let formattedRows = rows;
+				
+				const formatRow = (dictionary) => {
+					for (const key of Object.keys(dictionary)) {
+						if (typeof(dictionary[key]) === "string") {
+							if (JSON.parse(dictionary[key])) {
+								dictionary[key] = JSON.parse(dictionary[key].replaceAll("<u0027>","'"));
+							}
+						}
+					}
+				};
+				
+				if (Array.isArray(formattedRows)) {
+					for (const dictionary of formattedRows) {
+						formatRow(dictionary);
+					}
+				} else {
+					formatRow(formattedRows);
+				}
+				
+				return formattedRows;
+			};
+
+			return database;
 		},
 		["nameFromMember"]: (member) => {
 			return member.nickname ? member.nickname : member.user.globalName ? member.user.globalName : member.user.username;
