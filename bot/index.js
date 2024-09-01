@@ -6,7 +6,7 @@ const token = "";
 const userId = "";
 
 const client = new discord.Client({
-	intents: [
+	["intents"]: [
 		discord.IntentsBitField.Flags.Guilds,
 		discord.IntentsBitField.Flags.GuildMembers,
 		discord.IntentsBitField.Flags.GuildMessages,
@@ -25,7 +25,7 @@ for (const file of fs.readdirSync(`${__dirname}/commands`)) {
 new discord.REST({["version"]: 10}).setToken(token).put(
 	discord.Routes.applicationCommands(userId),
 	{
-		body: commands
+		["body"]: commands
 	}
 );
 
@@ -33,7 +33,7 @@ function sqliteDatabase(fileDirectory,databaseName) {
 	const databasePath = `${__dirname}/database${fileDirectory.replace(__dirname,"")}/${databaseName}.db`;
 	
 	if (!fs.existsSync(databasePath.replaceAll(`/${databaseName}.db`,""))) {
-		fs.mkdirSync(path.dirname(databasePath),{recursive: true});
+		fs.mkdirSync(path.dirname(databasePath),{["recursive"]: true});
 	}
     
 	let database = new sqlite.Database(databasePath);
@@ -92,7 +92,7 @@ function sqliteDatabase(fileDirectory,databaseName) {
 }
 
 {
-	const utilities = {
+	const utility = {
 		["nameFromMember"]: (member) => {
 			return member.nickname ? member.nickname : member.user.globalName ? member.user.globalName : member.user.username;
 		},
@@ -128,12 +128,12 @@ function sqliteDatabase(fileDirectory,databaseName) {
 	
 	client.on(discord.Events.InteractionCreate,(interaction) => {
 		if (interaction.isChatInputCommand()) {
-			require(`${__dirname}/commands/${interaction.commandName}`).execute(client,sqliteDatabase,interaction,utilities);
+			require(`${__dirname}/commands/${interaction.commandName}`).execute(client,sqliteDatabase,utility,interaction);
 		}
 	});
 	
 	for (const file of fs.readdirSync(`${__dirname}/scripts`)) {
-		require(`${__dirname}/scripts/${file}`)(client,sqliteDatabase,utilities);
+		require(`${__dirname}/scripts/${file}`)(client,sqliteDatabase,utility);
 	}
 }
 

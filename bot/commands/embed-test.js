@@ -6,7 +6,7 @@ module.exports = {
         ["name"]: path.basename(__filename).split(".")[0],
         ["description"]: "Embed test go brr",
     },
-    ["execute"]: async (client,sqliteDatabase,interaction,utilities) => {
+    ["execute"]: async (client,sqliteDatabase,utility,interaction) => {
         await interaction.reply({
             embeds: [
                 {

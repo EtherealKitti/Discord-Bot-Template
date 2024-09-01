@@ -38,7 +38,7 @@ module.exports = {
             }
         ]
     },
-    ["execute"]: async (client,sqliteDatabase,interaction,utilities) => {
+    ["execute"]: async (client,sqliteDatabase,utility,interaction) => {
         const tableName = "test";
         const testDatabase = sqliteDatabase(__dirname,path.basename(__filename).split(".")[0]);
         
