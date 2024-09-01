@@ -29,70 +29,17 @@ new discord.REST({["version"]: 10}).setToken(token).put(
 	}
 );
 
-function sqliteDatabase(fileDirectory,databaseName) {
-	const databasePath = `${__dirname}/database${fileDirectory.replace(__dirname,"")}/${databaseName}.db`;
-	
-	if (!fs.existsSync(databasePath.replaceAll(`/${databaseName}.db`,""))) {
-		fs.mkdirSync(path.dirname(databasePath),{["recursive"]: true});
-	}
-    
-	let database = new sqlite.Database(databasePath);
-	
-	database.arrayToRows = (array) => {
-		let values = "";
-		
-		for (const row of array) {
-			let rowString = "";
-			
-			for (const element of row) {
-				if (typeof(element) === "string") {
-					rowString += `'${element.replaceAll("'","<u0027>")}',`;
-				} else {
-					rowString += `${element},`;
-				}
-			}
-			
-			values += `(${rowString.slice(0,-1)}),`;
-		}
-		
-		return values.slice(0,-1);
-	};
-	
-	database.formatJsonInRows = (rows) => {
-		let formattedRows = rows;
-		
-		const formatRow = (dictionary) => {
-			for (const key of Object.keys(dictionary)) {
-				if (typeof(dictionary[key]) === "string") {
-					if (!dictionary[key].match("^[0-9]+$")) {
-						try {
-							dictionary[key] = JSON.parse(dictionary[key].replaceAll("<u0027>","'"));
-						} catch {}
-					}
-				}
-			}
-		};
-		
-		if (Array.isArray(formattedRows)) {
-			for (const dictionary of formattedRows) {
-				formatRow(dictionary);
-			}
-		} else {
-			formatRow(formattedRows);
-		}
-		
-		return formattedRows;
-	};
-
-	database.jsonToValue = (json) => {
-		return `'${JSON.stringify(json).replaceAll("'","<u0027>")}'`;
-	}
-	
-	return database;
-}
-
 {
 	const utility = {
+		["database"]: (fileDirectory,databaseName) => {
+			const databasePath = `${__dirname}/database${fileDirectory.replace(__dirname,"")}/${databaseName}.db`;
+	
+			if (!fs.existsSync(databasePath.replaceAll(`/${databaseName}.db`,""))) {
+				fs.mkdirSync(path.dirname(databasePath),{["recursive"]: true});
+			}
+			
+			return new sqlite.Database(databasePath);
+		},
 		["nameFromMember"]: (member) => {
 			return member.nickname ? member.nickname : member.user.globalName ? member.user.globalName : member.user.username;
 		},
@@ -128,12 +75,12 @@ function sqliteDatabase(fileDirectory,databaseName) {
 	
 	client.on(discord.Events.InteractionCreate,(interaction) => {
 		if (interaction.isChatInputCommand()) {
-			require(`${__dirname}/commands/${interaction.commandName}`).execute(client,sqliteDatabase,utility,interaction);
+			require(`${__dirname}/commands/${interaction.commandName}`).execute(client,utility,interaction);
 		}
 	});
 	
 	for (const file of fs.readdirSync(`${__dirname}/scripts`)) {
-		require(`${__dirname}/scripts/${file}`)(client,sqliteDatabase,utility);
+		require(`${__dirname}/scripts/${file}`)(client,utility);
 	}
 }
 

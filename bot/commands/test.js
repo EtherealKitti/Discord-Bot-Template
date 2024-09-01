@@ -19,7 +19,7 @@ module.exports = {
             }
         ]
     },
-    ["execute"]: async (client,sqliteDatabase,utility,interaction) => {      
+    ["execute"]: async (client,utility,interaction) => {      
         if (!interaction.options.get("option2")) {
             await interaction.reply(interaction.options.get("option1").value);
         } else {
